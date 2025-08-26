@@ -1,38 +1,38 @@
-import * as Categoria from '../models/CategoriaModel.js';
+import * as Montadora from '../models/MontadoraModel.js';
 
 export const cadastrar = async (req, res) => {
     try {
-        const categoria = req.body;
+        const montadora = req.body;
 
         // Verificar se o corpo da requisição contém os dados necessários
-        if (!categoria || Object.keys(categoria).length === 0) {
+        if (!montadora || Object.keys(montadora).length === 0) {
             return res.status(400).json({
                 success: false,
                 status: 400,
-                message: 'Dados do categoria não fornecidos'
+                message: 'Dados do montadora não fornecidos'
             });
         }
         // Validar os dados do veículo
-        if (!categoria.tipo || !categoria.icone || !categoria.data_cadastro || !categoria.data_alteracao) {
+        if (!montadora.nome || !montadora.logotipo || !montadora.data_cadastro || !montadora.data_alteracao) {
             return res.status(400).json({
                 success: false,
                 status: 400,
-                message: 'Dados do categoria incompletos ou inválidos'
+                message: 'Dados do montadora incompletos ou inválidos'
             });
         }
         
-        const novoCategoria = await Categoria.cadastrar(categoria);   
+        const novoMontadora = await Montadora.cadastrar(montadora);   
         res.status(201).json({
             success: true,
             status: 201,
-            message: 'Categoria cadastrado com sucesso',
-            categoriaId: novoCategoria
+            message: 'Montadora cadastrado com sucesso',
+            montadoraId: novoMontadora
         });
     } catch (error) {
         res.status(500).json({
             success: false,
             status: 500,
-            message: 'Erro ao cadastrar categoria',
+            message: 'Erro ao cadastrar montadora',
             error: error.message
         });
     }
@@ -49,27 +49,27 @@ export const consultar = async (req, res) => {
 export const consultarTodos = async (req, res) => {
     const search = req.query.search || '';
     try {
-    const categorias = await Categoria.consultarTodos(search);
+    const montadoras = await Montadora.consultarTodos(search);
         // Verificar se foram encontrados veículos
-        if (categorias.length === 0) {
+        if (montadoras.length === 0) {
             return res.status(404).json({
                 success: false,
                 status: 404,
-                message: 'Nenhum categoria encontrado',
+                message: 'Nenhuma montadora encontrado',
                 data: []
             });
         }
         res.status(200).json({
             success: true,
             status: 200,
-            message: 'Categoria consultados com sucesso',
-            data: categorias 
+            message: 'Montadora consultadas com sucesso',
+            data: montadoras 
         });
     } catch (error) {
         res.status(500).json({
             success: false,
             status: 500,
-            message: 'Erro ao consultar categoria',
+            message: 'Erro ao consultar montadora',
             error: error.message
         });
     }

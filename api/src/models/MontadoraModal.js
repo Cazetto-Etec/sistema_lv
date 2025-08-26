@@ -1,32 +1,26 @@
 import pool from "../database/data.js";
 
 
-export const cadastrar = async (veiculo) => {    
+export const cadastrar = async (montadora) => {    
     // Obter uma conexão do pool
     const cx = await pool.getConnection(); 
     try {
         // Desestruturar o objeto veiculo
         const { 
-            modelo,
-            ano_fabricacao,
-            ano_modelo,
-            cor,
-            num_portas,
-            fotos,
-            categoria_id,
-            montadora_id,
-            tipo_cambio,
-            tipo_direcao,} = veiculo; 
+            nome,
+            logotipo,
+            data_cadastro,
+            data_alteracao, } = montadora; 
 
         // Query para inserir um novo veículo
-        const query = `INSERT INTO veiculo (modelo, ano_fabricacao, ano_modelo, cor, num_portas, fotos, categoria_id, montadora_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        const query = `INSERT INTO montadora (nome, logotipo, data_cadastro, data_alteracao) VALUES (?, ?, ?, ?)`;
 
         // Executar a query com os valores do veículo
-        const [result] = await cx.query(query,[modelo,ano_fabricacao,ano_modelo,cor,num_portas,fotos,categoria_id,montadora_id,tipo_cambio,tipo_direcao]);
+        const [result] = await cx.query(query,[nome, logotipo, data_cadastro, data_alteracao]);
     
         // Verificar se a inserção foi bem-sucedida
         if (result.affectedRows === 0) {
-            throw new Error("Erro ao cadastrar veículo");
+            throw new Error("Erro ao cadastrar montadora");
         } 
         // Retornar o ID do veículo inserido
         return result.insertId; 
@@ -45,12 +39,12 @@ export const consultarTodos = async (search) => {
     const cx = await pool.getConnection(); 
     try {
         // Query para consultar todos os veículos
-        let query = `SELECT * FROM veiculo`;
+        let query = `SELECT * FROM montadora`;
         let params = [];
 
         // Verificar se há um termo de pesquisa
         if (search) {
-            query += ` WHERE modelo LIKE ?`;
+            query += ` WHERE montadora LIKE ?`;
             params.push(`%${search}%`);
         }
 
