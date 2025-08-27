@@ -38,14 +38,6 @@ export const cadastrar = async (req, res) => {
     }
 };
 
-export const consultar = async (req, res) => {
-     res.status(200).json({
-            success: true,
-            status: 200,
-            message: 'Em desenvolvimentosss'
-        });
-}
-
 export const consultarTodos = async (req, res) => {
     const search = req.query.search || '';
     try {
@@ -72,5 +64,44 @@ export const consultarTodos = async (req, res) => {
             message: 'Erro ao consultar veículos',
             error: error.message
         });
+    }
+};
+
+export const consultarPorId = async (req, res) => {
+    const id = parseInt(req.params.id, 10);
+
+    if (isNaN(id)) {
+        return res.status(400).json({ success: false, message: 'ID inválido' });
+    }
+
+    try {
+        const veiculo = await consultarPorId(id); // Agora a função está definida!
+        if (!veiculo) {
+            return res.status(404).json({ success: false, message: 'Veiculo não encontrado' });
+        }
+
+        res.status(200).json({ success: true, data: veiculo });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Erro ao consultar veiculo', error: error.message });
+    }
+};
+
+export const deletarPorId = async (req, res) => {
+    const id = parseInt(req.params.id, 10);
+
+    if (isNaN(id)) {
+        return res.status(400).json({ success: false, message: 'ID inválido' });
+    }
+
+    try {
+        const sucesso = await deletarPorId(id);
+
+        if (!sucesso) {
+            return res.status(404).json({ success: false, message: 'veiculo não encontrado para deletar' });
+        }
+
+        res.status(200).json({ success: true, message: 'veiculo deletado com sucesso' });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Erro ao deletar veiculo', error: error.message });
     }
 };

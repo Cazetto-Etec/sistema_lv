@@ -62,3 +62,30 @@ export const consultarTodos = async (search) => {
         }
     }
 } 
+
+export const consultarPorId = async (id) => {
+    const cx = await pool.getConnection();
+    try {
+        const query = `SELECT * FROM categoria WHERE id = ?`;
+        const [rows] = await cx.query(query, [id]);
+        return rows.length > 0 ? rows[0] : null;
+    } catch (error) {
+        throw error;
+    } finally {
+        cx.release();
+    }
+};
+
+export const deletarPorId = async (id) => {
+    const cx = await pool.getConnection();
+    try {
+        const query = `DELETE FROM categoria WHERE id = ?`;
+        const [result] = await cx.query(query, [id]);
+
+        return result.affectedRows > 0;
+    } catch (error) {
+        throw error;
+    } finally {
+        cx.release();
+    }
+};

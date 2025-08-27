@@ -38,13 +38,24 @@ export const cadastrar = async (req, res) => {
     }
 };
 
-export const consultar = async (req, res) => {
-     res.status(200).json({
-            success: true,
-            status: 200,
-            message: 'Em desenvolvimentosss'
-        });
-}
+export const consultarPorId = async (req, res) => {
+    const id = parseInt(req.params.id, 10);
+
+    if (isNaN(id)) {
+        return res.status(400).json({ success: false, message: 'ID inválido' });
+    }
+
+    try {
+        const categoria = await Categoria.consultarPorId(id);
+        if (!categoria) {
+            return res.status(404).json({ success: false, message: 'Categoria não encontrado' });
+        }
+
+        res.status(200).json({ success: true, data: categoria });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Erro ao consultar Categoria', error: error.message });
+    }
+};
 
 export const consultarTodos = async (req, res) => {
     const search = req.query.search || '';
@@ -72,5 +83,25 @@ export const consultarTodos = async (req, res) => {
             message: 'Erro ao consultar categoria',
             error: error.message
         });
+    }
+};
+
+export const deletarPorId = async (req, res) => {
+    const id = parseInt(req.params.id, 10);
+
+    if (isNaN(id)) {
+        return res.status(400).json({ success: false, message: 'ID inválido' });
+    }
+
+    try {
+        const sucesso = await deletarPorId(id);
+
+        if (!sucesso) {
+            return res.status(404).json({ success: false, message: 'Categoria não encontrado para deletar' });
+        }
+
+        res.status(200).json({ success: true, message: 'Categoria deletado com sucesso' });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Erro ao deletar categoria', error: error.message });
     }
 };

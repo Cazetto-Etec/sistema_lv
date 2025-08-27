@@ -39,12 +39,23 @@ export const cadastrar = async (req, res) => {
 };
 
 export const consultar = async (req, res) => {
-     res.status(200).json({
-            success: true,
-            status: 200,
-            message: 'Em desenvolvimentosss'
-        });
-}
+    const id = parseInt(req.params.id, 10);
+    
+    if (isNaN(id)) {
+        return res.status(400).json({ success: false, message: 'ID inválido' });
+    }
+
+    try {
+        const veiculo = await consultarPorId(id);
+        if (!veiculo) {
+            return res.status(404).json({ success: false, message: 'Veículo não encontrado' });
+        }
+
+        res.status(200).json({ success: true, data: veiculo });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Erro ao consultar veículo', error: error.message });
+    }
+};
 
 export const consultarTodos = async (req, res) => {
     const search = req.query.search || '';
