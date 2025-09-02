@@ -75,7 +75,7 @@ export const consultarPorId = async (req, res) => {
     }
 
     try {
-        const veiculo = await consultarPorId(id); // Agora a função está definida!
+        const veiculo = await Veiculo.consultarPorId(id); // Agora a função está definida!
         if (!veiculo) {
             return res.status(404).json({ success: false, message: 'Veiculo não encontrado' });
         }
@@ -90,18 +90,36 @@ export const deletarPorId = async (req, res) => {
     const id = parseInt(req.params.id, 10);
 
     if (isNaN(id)) {
-        return res.status(400).json({ success: false, message: 'ID inválido' });
+        return res.status(400).json({
+            success: false,
+            status: 400,
+            message: 'ID inválido'
+        });
     }
 
     try {
-        const sucesso = await deletarPorId(id);
+        // chama o método do model/repository
+        const sucesso = await Veiculo.deletarPorId(id);
 
         if (!sucesso) {
-            return res.status(404).json({ success: false, message: 'veiculo não encontrado para deletar' });
+            return res.status(404).json({
+                success: false,
+                status: 404,
+                message: 'veiculo não encontrado para deletar'
+            });
         }
 
-        res.status(200).json({ success: true, message: 'veiculo deletado com sucesso' });
+        res.status(200).json({
+            success: true,
+            status: 200,
+            message: 'veiculo deletado com sucesso'
+        });
     } catch (error) {
-        res.status(500).json({ success: false, message: 'Erro ao deletar veiculo', error: error.message });
+        res.status(500).json({
+            success: false,
+            status: 500,
+            message: 'Erro ao deletar veiculo',
+            error: error.message
+        });
     }
 };

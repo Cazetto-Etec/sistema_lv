@@ -76,11 +76,23 @@ export const consultarPorId = async (id) => {
     }
 };
 
-export const deletarPorId = async (id) => {
+export const editarPorId = async (id, dados) => {
     const cx = await pool.getConnection();
     try {
-        const query = `DELETE FROM categoria WHERE id = ?`;
-        const [result] = await cx.query(query, [id]);
+        const query = `
+            UPDATE categoria
+            SET tipo = ?, icone = ?, data_alteracao = ?
+            WHERE id = ?
+        `;
+
+        const valores = [
+            dados.tipo,
+            dados.icone,
+            new Date(), // atualiza automaticamente a data de alteração
+            id
+        ];
+
+        const [result] = await cx.query(query, valores);
 
         return result.affectedRows > 0;
     } catch (error) {
@@ -88,4 +100,5 @@ export const deletarPorId = async (id) => {
     } finally {
         cx.release();
     }
+
 };

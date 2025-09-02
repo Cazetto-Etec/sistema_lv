@@ -20,8 +20,8 @@ export const cadastrar = async (req, res) => {
                 message: 'Dados do categoria incompletos ou inválidos'
             });
         }
-        
-        const novoCategoria = await Categoria.cadastrar(categoria);   
+
+        const novoCategoria = await Categoria.cadastrar(categoria);
         res.status(201).json({
             success: true,
             status: 201,
@@ -60,7 +60,7 @@ export const consultarPorId = async (req, res) => {
 export const consultarTodos = async (req, res) => {
     const search = req.query.search || '';
     try {
-    const categorias = await Categoria.consultarTodos(search);
+        const categorias = await Categoria.consultarTodos(search);
         // Verificar se foram encontrados veículos
         if (categorias.length === 0) {
             return res.status(404).json({
@@ -74,7 +74,7 @@ export const consultarTodos = async (req, res) => {
             success: true,
             status: 200,
             message: 'Categoria consultados com sucesso',
-            data: categorias 
+            data: categorias
         });
     } catch (error) {
         res.status(500).json({
@@ -90,18 +90,84 @@ export const deletarPorId = async (req, res) => {
     const id = parseInt(req.params.id, 10);
 
     if (isNaN(id)) {
-        return res.status(400).json({ success: false, message: 'ID inválido' });
+        return res.status(400).json({
+            success: false,
+            status: 400,
+            message: 'ID inválido'
+        });
     }
 
     try {
-        const sucesso = await deletarPorId(id);
+        // chama o método do model/repository
+        const sucesso = await Categoria.deletarPorId(id);
 
         if (!sucesso) {
-            return res.status(404).json({ success: false, message: 'Categoria não encontrado para deletar' });
+            return res.status(404).json({
+                success: false,
+                status: 404,
+                message: 'Categoria não encontrado para deletar'
+            });
         }
 
-        res.status(200).json({ success: true, message: 'Categoria deletado com sucesso' });
+        res.status(200).json({
+            success: true,
+            status: 200,
+            message: 'Categoria deletado com sucesso'
+        });
     } catch (error) {
-        res.status(500).json({ success: false, message: 'Erro ao deletar categoria', error: error.message });
+        res.status(500).json({
+            success: false,
+            status: 500,
+            message: 'Erro ao deletar categoria',
+            error: error.message
+        });
+    }
+};
+
+export const editarPorId = async (req, res) => {
+    const id = parseInt(req.params.id, 10);
+
+    if (isNaN(id)) {
+        return res.status(400).json({
+            success: false,
+            status: 400,
+            message: 'ID inválido'
+        });
+    }
+
+    const dados = req.body;
+
+    // Validação básica
+    if (!dados || Object.keys(dados).length === 0) {
+        return res.status(400).json({
+            success: false,
+            status: 400,
+            message: 'Dados para atualização não fornecidos'
+        });
+    }
+
+    try {
+        const sucesso = await Categoria.editarPorId(id, dados);
+
+        if (!sucesso) {
+            return res.status(404).json({
+                success: false,
+                status: 404,
+                message: 'Categoria não encontrada para edição'
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            status: 200,
+            message: 'Categoria atualizada com sucesso'
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            status: 500,
+            message: 'Erro ao editar categoria',
+            error: error.message
+        });
     }
 };

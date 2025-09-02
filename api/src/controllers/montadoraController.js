@@ -38,7 +38,7 @@ export const cadastrar = async (req, res) => {
     }
 };
 
-export const consultar = async (req, res) => {
+export const consultarPorId = async (req, res) => {
     const id = parseInt(req.params.id, 10);
     
     if (isNaN(id)) {
@@ -81,6 +81,44 @@ export const consultarTodos = async (req, res) => {
             success: false,
             status: 500,
             message: 'Erro ao consultar montadora',
+            error: error.message
+        });
+    }
+};
+
+export const deletarPorId = async (req, res) => {
+    const id = parseInt(req.params.id, 10);
+
+    if (isNaN(id)) {
+        return res.status(400).json({
+            success: false,
+            status: 400,
+            message: 'ID inválido'
+        });
+    }
+
+    try {
+        // chama o método do model/repository
+        const sucesso = await Montadora.deletarPorId(id);
+
+        if (!sucesso) {
+            return res.status(404).json({
+                success: false,
+                status: 404,
+                message: 'montadora não encontrado para deletar'
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            status: 200,
+            message: 'montadora deletado com sucesso'
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            status: 500,
+            message: 'Erro ao deletar montadora',
             error: error.message
         });
     }

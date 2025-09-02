@@ -25,14 +25,17 @@ app.get('/',(req,res)=>{
             'GET - Consultar veículo': `${rootDomain}/api/veiculo`,
             'GET - Consultar todos os veículos': `${rootDomain}/api/veiculos`,
             'POST - Cadastrar veículo':`${rootDomain}/api/veiculo`,
+            'DELETE - Deletar veículo':`${rootDomain}/api/veiculo`,
 
             'GET - Consultar categoria': `${rootDomain}/api/categorias`,
             'GET - Consultar todas as categorias': `${rootDomain}/api/categorias`,
             'POST - Consultar categoria': `${rootDomain}/api/categorias`,
+            'DELETE - Deletar categorias':`${rootDomain}/api/categoria`,
 
             'GET - Consultar montadora': `${rootDomain}/api/montadora`,
             'GET - Consultar todas as montadoras': `${rootDomain}/api/montadoras`,
             'POST - Consultar montadora': `${rootDomain}/api/montadora`,
+            'DELETE - Deletar montadora':`${rootDomain}/api/montadora`,
         }
     });
 });
